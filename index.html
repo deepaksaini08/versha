@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Someone Special ❤️</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:#000;color:white;overflow:hidden}
+
+/* Slide */
+.slide{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    padding:20px;
+    background:linear-gradient(180deg,#ff4d6d,#ff758c);
+    transition:1s cubic-bezier(.4,0,.2,1);
+}
+.hidden{opacity:0;transform:translateY(100%) scale(.9);pointer-events:none}
+
+/* Text */
+h1{font-size:1.9rem;margin-bottom:15px}
+
+/* Love meter */
+.meter{
+    width:200px;
+    height:10px;
+    background:rgba(255,255,255,.3);
+    border-radius:10px;
+    overflow:hidden;
+    margin:10px auto;
+}
+.fill{
+    height:100%;
+    width:0%;
+    background:white;
+    transition:.6s;
+}
+
+/* Reaction */
+.reaction{
+    font-size:2.6rem;
+    animation:bounce 1s infinite;
+}
+@keyframes bounce{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-12px)}
+}
+
+/* Buttons */
+button{
+    padding:15px 34px;
+    border:none;
+    border-radius:40px;
+    font-weight:bold;
+    margin:10px;
+    cursor:pointer;
+    font-size:1rem;
+    transition:.25s;
+}
+button:active{transform:scale(.9)}
+
+.yes{
+    background:white;
+    color:#ff2f68;
+    box-shadow:0 0 25px rgba(255,255,255,.8);
+}
+.no{
+    background:rgba(255,255,255,.4);
+    color:white;
+    position:absolute;
+}
+
+/* Glow */
+.glow{
+    animation:glow 1.4s infinite alternate;
+}
+@keyframes glow{
+    from{text-shadow:0 0 10px #fff}
+    to{text-shadow:0 0 30px #fff}
+}
+
+/* Hearts */
+.heart{
+    position:fixed;
+    bottom:-10px;
+    font-size:22px;
+    animation:float 6s linear infinite;
+}
+@keyframes float{
+    from{transform:translateY(0);opacity:1}
+    to{transform:translateY(-110vh);opacity:0}
+}
+
+/* Final image */
+.final-img{
+    max-width:260px;
+    border-radius:22px;
+    margin-top:20px;
+    animation:zoom 1.2s ease;
+}
+@keyframes zoom{
+    from{transform:scale(.6);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+/* Shake */
+.shake{animation:shake .4s}
+@keyframes shake{
+    0%{transform:translateX(0)}
+    25%{transform:translateX(-5px)}
+    50%{transform:translateX(5px)}
+    75%{transform:translateX(-5px)}
+    100%{transform:translateX(0)}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+    <source src="Itni Si Baat Hain Azhar 128 Kbps.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Slide 1 -->
+<div class="slide" id="s1">
+    <h1 id="type"></h1>
+</div>
+
+<!-- Slide 2 -->
+<div class="slide hidden" id="s2">
+    <h1>Do you need gf? 😌</h1>
+    <div class="meter"><div class="fill" id="f1"></div></div>
+    <button class="yes" onclick="reaction('Crush Mode : Activates😍💘','🥰',3,40)">Yes</button>
+    <button class="yes" onclick="reaction('Ouch… that hurt 😢','😭',3,10)">No</button>
+</div>
+
+<!-- Slide 3 -->
+<div class="slide hidden" id="s3">
+    <h1>Do you like me? 🥺</h1>
+    <div class="meter"><div class="fill" id="f2"></div></div>
+    <button class="yes" onclick="reaction('I KNEW IT 😍❤️','💃',4,70)">Yes</button>
+    <button class="yes" onclick="reaction('Why are you breaking my heart 💔❌','💔',4,40)">No</button>
+</div>
+
+<!-- Slide 4 -->
+<div class="slide hidden" id="s4">
+    <h1 class="glow"> Will you be my Valentine? 💖</h1>
+    <div class="meter"><div class="fill" id="f3"></div></div>
+    <button class="yes" onclick="celebrate()">YES 😍</button>
+    <button class="no" id="noBtn">No 🙈</button>
+</div>
+
+<!-- Final -->
+<div class="slide hidden" id="s5">
+    <h1 class="glow">Best decision ever 😌❤️</h1>
+    <img src="myimage.jpeg" class="final-img" alt="myImage">
+</div>
+
+<script>
+const bgMusic=document.getElementById("bgMusic");
+
+/* Play music after first interaction */
+function startMusic(){
+    bgMusic.volume=0.6;
+    bgMusic.play().catch(()=>{});
+    document.removeEventListener("click",startMusic);
+    document.removeEventListener("touchstart",startMusic);
+}
+document.addEventListener("click",startMusic);
+document.addEventListener("touchstart",startMusic);
+
+/* Typewriter */
+const text="Hey… wait 😌 You unlocked my heart 🔓❤️";
+let i=0;
+function type(){
+    if(i<text.length){
+        document.getElementById("type").innerHTML+=text.charAt(i);
+        i++;
+        setTimeout(type,65);
+    }else{
+        setTimeout(()=>go(2),1400);
+    }
+}
+type();
+
+/* Slide control */
+function go(n){
+    document.querySelectorAll(".slide").forEach(s=>s.classList.add("hidden"));
+    document.getElementById("s"+n).classList.remove("hidden");
+}
+
+/* Reaction */
+function reaction(msg,emoji,next,fill){
+    document.querySelectorAll(".slide").forEach(s=>s.classList.add("hidden"));
+    const temp=document.createElement("div");
+    temp.className="slide";
+    temp.innerHTML=`<div class="reaction">${emoji}</div><h1>${msg}</h1>`;
+    document.body.appendChild(temp);
+    setTimeout(()=>{
+        temp.remove();
+        document.getElementById("f"+(next-1)).style.width=fill+"%";
+        go(next);
+    },1600);
+}
+
+/* NO escape */
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseover",move);
+noBtn.addEventListener("touchstart",move);
+function move(){
+    noBtn.classList.add("shake");
+    setTimeout(()=>noBtn.classList.remove("shake"),400);
+    noBtn.style.left=Math.random()*80+"vw";
+    noBtn.style.top=Math.random()*80+"vh";
+}
+
+/* Celebrate */
+function celebrate(){
+    document.getElementById("f3").style.width="100%";
+    go(5);
+    confetti();
+}
+
+/* Confetti */
+function confetti(){
+    for(let i=0;i<140;i++){
+        const c=document.createElement("div");
+        c.style.position="fixed";
+        c.style.width="8px";
+        c.style.height="8px";
+        c.style.borderRadius="50%";
+        c.style.background=`hsl(${Math.random()*360},100%,60%)`;
+        c.style.left=Math.random()*100+"vw";
+        c.style.top="-10px";
+        c.style.transition="2.5s";
+        document.body.appendChild(c);
+        setTimeout(()=>c.style.top="100vh",50);
+        setTimeout(()=>c.remove(),2500);
+    }
+}
+
+/* Hearts */
+setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+},600);
+</script>
+
+</body>
+</html>
